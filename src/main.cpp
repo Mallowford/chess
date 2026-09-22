@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <vector>
+#define WINDOW_SIZE 800
 
 enum class Piece_Type {
     Pawn,
@@ -30,10 +31,10 @@ struct ChessPiece {
 void CreateBoard(std::vector<sf::RectangleShape>& board);
 void pawnRow(std::vector<ChessPiece>& board);
 bool move();
-std::vector<Position> legal_moves(Piece_Type type, Position starting_position);
+std::vector<Position> legal_moves(Piece_Type type, const Position& starting_position);
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({800, 800}), "Chess", sf::State::Windowed, {sf::Style::Titlebar, sf::Style::Close});
+    sf::RenderWindow window(sf::VideoMode({WINDOW_SIZE, WINDOW_SIZE}), "Chess", sf::State::Windowed, {sf::Style::Titlebar, sf::Style::Close});
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(false);
 
@@ -44,6 +45,13 @@ int main() {
 
     CreateBoard(map);
     pawnRow(pieces);
+    Position test_location(0, 0);
+
+    std::vector<Position> printMoves = legal_moves(Piece_Type::Queen, test_location);
+
+    for (auto& view : printMoves) {
+        std::cout << "Col: " << view.col << "\tRow: " << view.row << "\n";  
+    };
 
     // std::cout << sprite.getScale().x << "\n";
     // std::cout << sprite.getScale().y << "\n";
@@ -107,14 +115,15 @@ void pawnRow(std::vector<ChessPiece>& pieces) {
     for (int i = 0; i < 8; i++) {
         sf::Texture* pawnTexture = new sf::Texture("../assets/chess_pieces/black_pawn.png");
         ChessPiece new_pawn(*(pawnTexture), true, Piece_Type::Pawn, 0, 0);
-        sf::Vector2f targetSize(100.0f, 100.0f);
+        float standard_size = WINDOW_SIZE / 8.0f;
+        sf::Vector2f targetSize(standard_size, standard_size);
 
         float X = targetSize.x / new_pawn.localSprite.getLocalBounds().size.x;
         float Y = targetSize.y / new_pawn.localSprite.getLocalBounds().size.y;
 
         new_pawn.localSprite.setScale({X, Y});
-        X = i * 100;
-        Y = 1 * 100;
+        X = i * (standard_size);
+        Y = 1 * (standard_size);
         new_pawn.localSprite.setPosition({X, Y});
         
         pieces.push_back(new_pawn);
@@ -123,14 +132,15 @@ void pawnRow(std::vector<ChessPiece>& pieces) {
     for (int i = 0; i < 8; i++) {
         sf::Texture* pawnTexture = new sf::Texture("../assets/chess_pieces/white_pawn.png");
         ChessPiece new_pawn(*(pawnTexture), true, Piece_Type::Pawn, 0, 0);
-        sf::Vector2f targetSize(100.0f, 100.0f);
+        float standard_size = WINDOW_SIZE / 8.0f;
+        sf::Vector2f targetSize(standard_size, standard_size);
 
         float X = targetSize.x / new_pawn.localSprite.getLocalBounds().size.x;
         float Y = targetSize.y / new_pawn.localSprite.getLocalBounds().size.y;
 
         new_pawn.localSprite.setScale({X, Y});
-        X = i * 100;
-        Y = 6 * 100;
+        X = i * standard_size;
+        Y = 6 * standard_size;
         new_pawn.localSprite.setPosition({X, Y});
         
         pieces.push_back(new_pawn);
@@ -138,7 +148,7 @@ void pawnRow(std::vector<ChessPiece>& pieces) {
 };
 
 bool move(ChessPiece& piece, Position& desired_location) {
-
+    return false;
 };
 
 std::vector<Position> all_moves_bishop(const Position& starting_location) {
@@ -194,39 +204,82 @@ std::vector<Position> all_moves_king(const Position& starting_location) {
 };
 
 std::vector<Position> all_moves_knight(const Position& starting_location) {
+    std::vector<Position> res;
 
+    Position UpLeft(starting_location.row - 2, starting_location.col - 1);
+    Position UpRight(starting_location.row - 2, starting_location.col + 1);
+    Position DownLeft(starting_location.row + 2, starting_location.col - 1);
+    Position DownRight(starting_location.row + 2, starting_location.col + 1);
+
+    res.push_back(UpLeft);
+    res.push_back(UpRight);
+    res.push_back(DownLeft);
+    res.push_back(DownRight);
+
+    return res;
 };
 
 std::vector<Position> all_moves_pawn(const Position& starting_location) {
     std::vector<Position> res;
+    
+    // for (int i = ) {
+
+    // };
 
     return res;
 };
 std::vector<Position> legal_moves(Piece_Type piece_type, const Position& starting_position) {
     std::vector<Position> res;
+    // std::vector<Position> to_add;
     switch(piece_type) {
         case Piece_Type::Pawn:
-            all_moves_pawn(starting_position);
+            res = all_moves_pawn(starting_position);
             break;
         case Piece_Type::King:
-            all_moves_king(starting_position);
-            break;
-        case Piece_Type::Queen:
-            all_moves_bishop(starting_position);
-            all_moves_rook(starting_position);
-            break;
-        case Piece_Type::Bishop:
-            all_moves_bishop(starting_position);
+            res = all_moves_king(starting_position);
             break;
         case Piece_Type::Knight:
+            res = all_moves_knight(starting_position);
             break;
+        case Piece_Type::Queen:
+            [[fallthrough]];
+        case Piece_Type::Bishop:
+            res = all_moves_bishop(starting_position);
+            if (piece_type == Piece_Type::Bishop) {
+                break;
+            };
+            [[fallthrough]];
         case Piece_Type::Rook:
-            all_moves_rook(starting_position);
+            {
+            auto rook_moves = all_moves_rook(starting_position);
+            res.insert(res.end(), rook_moves.begin(), rook_moves.end());
+            };
             break;
         default:
             std::cerr << "A piece was not properly defined";
-            break;        
+            break;
     };
+
+    // Remove out of bound cases
+    auto it = res.begin();
+
+    while (it != res.end()) {
+        if (it->col < 0 || it->row < 0 || it->col > 7 || it->row > 7) {
+          it = res.erase(it);
+        }
+        else {
+            it++;
+        };
+    };
+
+    // Determine if something is blocking the path
+    // WIP, Requires Board Knowledge
+
+    // Determine if moving will cause check/checkmate
+
+    // If in Check, remove all moves that do not prevent check
+
+    // En passante 
 
     return res;
 };
