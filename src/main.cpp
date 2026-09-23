@@ -45,9 +45,9 @@ int main() {
 
     CreateBoard(map);
     pawnRow(pieces);
-    Position test_location(0, 0);
+    Position test_location(5, 5);
 
-    std::vector<Position> printMoves = legal_moves(Piece_Type::Queen, test_location);
+    std::vector<Position> printMoves = legal_moves(Piece_Type::Knight, test_location);
 
     for (auto& view : printMoves) {
         std::cout << "Col: " << view.col << "\tRow: " << view.row << "\n";  
@@ -206,15 +206,13 @@ std::vector<Position> all_moves_king(const Position& starting_location) {
 std::vector<Position> all_moves_knight(const Position& starting_location) {
     std::vector<Position> res;
 
-    Position UpLeft(starting_location.row - 2, starting_location.col - 1);
-    Position UpRight(starting_location.row - 2, starting_location.col + 1);
-    Position DownLeft(starting_location.row + 2, starting_location.col - 1);
-    Position DownRight(starting_location.row + 2, starting_location.col + 1);
+    std::vector<Position> offset = {{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
 
-    res.push_back(UpLeft);
-    res.push_back(UpRight);
-    res.push_back(DownLeft);
-    res.push_back(DownRight);
+    for (int i = 0; i < offset.size(); i++) {
+        Position newMove(starting_location.row + offset.at(i).row, starting_location.col + offset.at(i).col);
+        res.push_back(newMove);
+    };
+
 
     return res;
 };
