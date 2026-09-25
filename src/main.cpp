@@ -131,11 +131,20 @@ void pawnRow(std::vector<ChessPiece>& pieces) {
 };
 
 Position click_detection(int x, int y) {
+    Position affectedPiece(0, 0);
 
-    // Divide x by 100 to get column, if 8 then round it to 7
-    // Divide y by 100 to get row, if 8 then round it to 7
+    if (x/100 == 8) {
+        affectedPiece.col = 7;
+    }
+    else {
+        affectedPiece.col = x/100;
+    };
+    if (y/100 == 8) {
+        affectedPiece.row = 7;
+    }
+    else {
+        affectedPiece.row = y/100;
+    };
 
-    // Check if there's a piece at x, y
-    // If Piece, then return piece coordinates
-
+    return affectedPiece;
 };
