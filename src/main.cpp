@@ -139,6 +139,7 @@ Position click_detection(int x, int y) {
     else {
         affectedPiece.col = x/100;
     };
+    
     if (y/100 == 8) {
         affectedPiece.row = 7;
     }
