@@ -1,45 +1,13 @@
-#include "../header/Chess.hpp"
-#include <iostream>
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
-#include <vector>
-#define WINDOW_SIZE 800
-
-enum class Piece_Type {
-    Pawn,
-    Knight,
-    Bishop,
-    Rook,
-    Queen,
-    King
-};
-
-struct Position {
-    int row;
-    int col;
-    Position(int row, int col) : row(row), col(col) {};
-};
-
-struct ChessPiece {
-    sf::Sprite localSprite;
-    bool White = true;
-    bool hasMoved = false;
-    Piece_Type piece = Piece_Type::Pawn;
-    Position pos;
-    ChessPiece(const sf::Texture& texture, bool isWhite, Piece_Type type, int row, int col) : localSprite(texture), White(isWhite), piece(type), pos(row, col) {};
-};
-
-void CreateBoard(std::vector<sf::RectangleShape>& board);
-void pawnRow(std::vector<ChessPiece>& board);
-bool move();
-std::vector<Position> legal_moves(Piece_Type type, const Position& starting_position);
-
-bool click_detection(int x, int y);
+#include "../header/ChessEngine.hpp"
 
 int main() {
+    Engine engine;
+
+    engine.start();
     sf::RenderWindow window(sf::VideoMode({WINDOW_SIZE, WINDOW_SIZE}), "Chess", sf::State::Windowed, {sf::Style::Titlebar, sf::Style::Close});
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(false);
+
 
     sf::Clock billyMays;
 
@@ -64,6 +32,13 @@ int main() {
             if (event->is<sf::Event::Closed>()) {
                 window.close();
             };
+            if (event->is<sf::Event::MouseButtonPressed>()) {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+                    Position clickLocation = click_detection(sf::Mouse::getPosition(window));
+                    
+                    std::cout << "Row: " << clickLocation.row << "\tCol: " << clickLocation.col << "\n";
+                };
+            };
         };
         if (!window.hasFocus()) { // Lost Focus
             if (billyMays.getElapsedTime().asSeconds() > 1) {
@@ -71,6 +46,8 @@ int main() {
                 billyMays.restart();
             };
         };
+
+
 
         window.clear(sf::Color::Black);
 
@@ -150,7 +127,7 @@ void pawnRow(std::vector<ChessPiece>& pieces) {
     };
 };
 
-bool move(ChessPiece& piece, Position& desired_location) {
+bool move(ChessPiece& piece, Position desired_location) {
     return false;
 };
 
@@ -285,21 +262,14 @@ std::vector<Position> legal_moves(Piece_Type piece_type, const Position& startin
     return res;
 };
 
-Position click_detection(int x, int y) {
-    Position affectedPiece(0, 0);
+Position click_detection(sf::Vector2i mousePos) {
+    Position affectedPiece(mousePos.y/100, mousePos.x/100);
 
-    if (x/100 == 8) {
+    if (affectedPiece.col == 8) {
         affectedPiece.col = 7;
-    }
-    else {
-        affectedPiece.col = x/100;
     };
-    
-    if (y/100 == 8) {
+    if (affectedPiece.row == 8) {
         affectedPiece.row = 7;
-    }
-    else {
-        affectedPiece.row = y/100;
     };
 
     return affectedPiece;
