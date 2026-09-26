@@ -23,6 +23,7 @@ struct Position {
 struct ChessPiece {
     sf::Sprite localSprite;
     bool White = true;
+    bool hasMoved = false;
     Piece_Type piece = Piece_Type::Pawn;
     Position pos;
     ChessPiece(const sf::Texture& texture, bool isWhite, Piece_Type type, int row, int col) : localSprite(texture), White(isWhite), piece(type), pos(row, col) {};
@@ -32,6 +33,8 @@ void CreateBoard(std::vector<sf::RectangleShape>& board);
 void pawnRow(std::vector<ChessPiece>& board);
 bool move();
 std::vector<Position> legal_moves(Piece_Type type, const Position& starting_position);
+
+bool click_detection(int x, int y);
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({WINDOW_SIZE, WINDOW_SIZE}), "Chess", sf::State::Windowed, {sf::Style::Titlebar, sf::Style::Close});
@@ -280,4 +283,24 @@ std::vector<Position> legal_moves(Piece_Type piece_type, const Position& startin
     // En passante 
 
     return res;
+};
+
+Position click_detection(int x, int y) {
+    Position affectedPiece(0, 0);
+
+    if (x/100 == 8) {
+        affectedPiece.col = 7;
+    }
+    else {
+        affectedPiece.col = x/100;
+    };
+    
+    if (y/100 == 8) {
+        affectedPiece.row = 7;
+    }
+    else {
+        affectedPiece.row = y/100;
+    };
+
+    return affectedPiece;
 };
