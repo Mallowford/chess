@@ -17,6 +17,7 @@ struct ChessPiece {
     sf::Sprite localSprite;
     bool White = true;
     Piece_Type piece = Piece_Type::Pawn;
+    bool hasMoved = false;
     ChessPiece(const sf::Texture& texture, bool isWhite, Piece_Type type) : localSprite(texture), White(isWhite), piece(type) {};
 };
 
