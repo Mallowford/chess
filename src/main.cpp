@@ -24,6 +24,8 @@ struct ChessPiece {
 void CreateBoard(std::vector<sf::RectangleShape>& board);
 void pawnRow(std::vector<ChessPiece>& board);
 
+bool click_detection(int x, int y);
+
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 800}), "Chess", sf::State::Windowed, {sf::Style::Titlebar, sf::Style::Close});
     window.setFramerateLimit(60);
@@ -127,4 +129,24 @@ void pawnRow(std::vector<ChessPiece>& pieces) {
         
         pieces.push_back(new_pawn);
     };
+};
+
+Position click_detection(int x, int y) {
+    Position affectedPiece(0, 0);
+
+    if (x/100 == 8) {
+        affectedPiece.col = 7;
+    }
+    else {
+        affectedPiece.col = x/100;
+    };
+    
+    if (y/100 == 8) {
+        affectedPiece.row = 7;
+    }
+    else {
+        affectedPiece.row = y/100;
+    };
+
+    return affectedPiece;
 };
