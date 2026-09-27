@@ -33,6 +33,8 @@ struct ChessPiece {
 class Engine {
     private:
         std::unordered_map<Position, ChessPiece*> boardState;
+        std::vector<sf::RectangleShape> boardSprites;
+
     public:
         Engine();
         ~Engine();
@@ -40,9 +42,16 @@ class Engine {
         Engine& operator=(const Engine&) = delete;
 
         void start();
-        void CreateBoard(std::vector<sf::RectangleShape>& board);
-        void pawnRow(std::vector<ChessPiece>& board);
         std::vector<Position> legal_moves(Piece_Type type, const Position& starting_position);
         Position click_detection(sf::Vector2i);
         bool move();
+        void draw(sf::RenderWindow& window);
+    private:
+        void CreateBoard(std::vector<sf::RectangleShape>& board);
+        void pawnRow(std::vector<ChessPiece>& board);
+        std::vector<Position> all_moves_knight(const Position& starting_location);
+        std::vector<Position> all_moves_pawn(const Position& starting_location);
+        std::vector<Position> all_moves_king(const Position& starting_location);
+        std::vector<Position> all_moves_rook(const Position& starting_location);
+        std::vector<Position> all_moves_bishop(const Position& starting_location);
 };
