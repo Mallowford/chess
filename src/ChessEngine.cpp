@@ -213,6 +213,13 @@ void Engine::draw(sf::RenderWindow& window) {
     };
 
     // Draw Pieces
+    for (int i = 0; i < this->boardState.size(); i++) {
+        for (int j = 0; j < this->boardState.at(i).size(); j++) {
+            window.draw(this->boardState.at(i).at(j)->localSprite);
+        };
+    };
 
     // Draw Spots Where Piece Can Move
+    
+
 };

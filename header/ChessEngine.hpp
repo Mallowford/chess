@@ -32,7 +32,7 @@ struct ChessPiece {
 
 class Engine {
     private:
-        std::unordered_map<Position, ChessPiece*> boardState;
+        std::vector<std::vector<ChessPiece*>> boardState;
         std::vector<sf::RectangleShape> boardSprites;
 
     public:
