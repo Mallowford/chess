@@ -50,11 +50,9 @@ int main() {
         engine.draw(window);
 
 
-        for (int i = 0; i < pieces.size(); i++) {
-            window.draw(pieces.at(i).localSprite);
-        };
-
-        // window.draw(sprite);
+        // for (int i = 0; i < pieces.size(); i++) {
+        //     window.draw(pieces.at(i).localSprite);
+        // };
 
         window.display();        
     };

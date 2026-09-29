@@ -142,7 +142,7 @@ Position Engine::click_detection(sf::Vector2i mousePos) {
     return affectedPiece;
 };
 
-void CreateBoard(std::vector<sf::RectangleShape>& board) {
+void Engine::CreateBoard() {
     for (int i = 0; i < 8; i++) {
         int alt = i;
         for (int j = 0; j < 8; j++) {
@@ -158,52 +158,60 @@ void CreateBoard(std::vector<sf::RectangleShape>& board) {
                 tile.setFillColor(sf::Color(238, 238, 210));
             };
 
-            board.push_back(tile);
+            this->boardSprites.push_back(tile);
             alt++;
         };
     };
 };
 
-void pawnRow(std::vector<ChessPiece>& pieces) {
+void Engine::pawnRow() {
+    for (int i = 0; i < 8; i++) {
+        std::vector<ChessPiece> empty;
+        for (int j = 0; j < 8; j++) {
+            ChessPiece em(false, Piece_Type::EMPTY);
+            empty.push_back(em);
+        };
+        this->boardState.push_back(empty);
+    };
     // Black Pawns
+
     for (int i = 0; i < 8; i++) {
         sf::Texture* pawnTexture = new sf::Texture("../assets/chess_pieces/black_pawn.png");
-        ChessPiece new_pawn(*(pawnTexture), true, Piece_Type::Pawn, 0, 0);
+        ChessPiece new_pawn(*(pawnTexture), true, Piece_Type::Pawn);
         float standard_size = WINDOW_SIZE / 8.0f;
         sf::Vector2f targetSize(standard_size, standard_size);
 
-        float X = targetSize.x / new_pawn.localSprite.getLocalBounds().size.x;
-        float Y = targetSize.y / new_pawn.localSprite.getLocalBounds().size.y;
+        float X = targetSize.x / new_pawn.localSprite->getLocalBounds().size.x;
+        float Y = targetSize.y / new_pawn.localSprite->getLocalBounds().size.y;
 
-        new_pawn.localSprite.setScale({X, Y});
+        new_pawn.localSprite->setScale({X, Y});
         X = i * (standard_size);
         Y = 1 * (standard_size);
-        new_pawn.localSprite.setPosition({X, Y});
-        
-        pieces.push_back(new_pawn);
+        new_pawn.localSprite->setPosition({X, Y});
+        this->boardState.at(1).at(i) = new_pawn;
     };
     // White Pawns
     for (int i = 0; i < 8; i++) {
         sf::Texture* pawnTexture = new sf::Texture("../assets/chess_pieces/white_pawn.png");
-        ChessPiece new_pawn(*(pawnTexture), true, Piece_Type::Pawn, 0, 0);
+        ChessPiece new_pawn(*(pawnTexture), true, Piece_Type::Pawn);
         float standard_size = WINDOW_SIZE / 8.0f;
         sf::Vector2f targetSize(standard_size, standard_size);
 
-        float X = targetSize.x / new_pawn.localSprite.getLocalBounds().size.x;
-        float Y = targetSize.y / new_pawn.localSprite.getLocalBounds().size.y;
+        float X = targetSize.x / new_pawn.localSprite->getLocalBounds().size.x;
+        float Y = targetSize.y / new_pawn.localSprite->getLocalBounds().size.y;
 
-        new_pawn.localSprite.setScale({X, Y});
+        new_pawn.localSprite->setScale({X, Y});
         X = i * standard_size;
         Y = 6 * standard_size;
-        new_pawn.localSprite.setPosition({X, Y});
+        new_pawn.localSprite->setPosition({X, Y});
         
-        pieces.push_back(new_pawn);
+        this->boardState.at(6).at(i) = new_pawn;
     };
 };
 
 void Engine::start() {
-    CreateBoard(this->boardSprites);
-    
+    CreateBoard();
+    pawnRow();
 };
 
 void Engine::draw(sf::RenderWindow& window) {
@@ -215,7 +223,10 @@ void Engine::draw(sf::RenderWindow& window) {
     // Draw Pieces
     for (int i = 0; i < this->boardState.size(); i++) {
         for (int j = 0; j < this->boardState.at(i).size(); j++) {
-            window.draw(this->boardState.at(i).at(j)->localSprite);
+            if (this->boardState.at(i).at(j).piece == Piece_Type::EMPTY) {
+                continue;
+            };
+            window.draw(*(this->boardState.at(i).at(j)).localSprite);
         };
     };
 
@@ -223,3 +234,6 @@ void Engine::draw(sf::RenderWindow& window) {
     
 
 };
+
+Engine::Engine() {};
+Engine::~Engine() {};

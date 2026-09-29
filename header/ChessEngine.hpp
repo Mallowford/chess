@@ -12,7 +12,8 @@ enum class Piece_Type {
     Bishop,
     Rook,
     Queen,
-    King
+    King,
+    EMPTY
 };
 
 struct Position {
@@ -22,17 +23,17 @@ struct Position {
 };
 
 struct ChessPiece {
-    sf::Sprite localSprite;
+    std::optional<sf::Sprite> localSprite;
     bool White = true;
     bool hasMoved = false;
     Piece_Type piece = Piece_Type::Pawn;
-    Position pos;
-    ChessPiece(const sf::Texture& texture, bool isWhite, Piece_Type type, int row, int col) : localSprite(texture), White(isWhite), piece(type), pos(row, col) {};
+    ChessPiece(const sf::Texture& texture, bool isWhite, Piece_Type type) : localSprite(texture), White(isWhite), piece(type) {};
+    ChessPiece(bool isWhite, Piece_Type type) : White(isWhite), piece(type) {};
 };
 
 class Engine {
     private:
-        std::vector<std::vector<ChessPiece*>> boardState;
+        std::vector<std::vector<ChessPiece>> boardState;
         std::vector<sf::RectangleShape> boardSprites;
 
     public:
@@ -47,8 +48,8 @@ class Engine {
         bool move();
         void draw(sf::RenderWindow& window);
     private:
-        void CreateBoard(std::vector<sf::RectangleShape>& board);
-        void pawnRow(std::vector<ChessPiece>& board);
+        void CreateBoard();
+        void pawnRow();
         std::vector<Position> all_moves_knight(const Position& starting_location);
         std::vector<Position> all_moves_pawn(const Position& starting_location);
         std::vector<Position> all_moves_king(const Position& starting_location);

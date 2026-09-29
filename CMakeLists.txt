@@ -16,6 +16,7 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(Chess.o
     src/main.cpp
+    src/ChessEngine.cpp
 )
 
 target_compile_features(Chess.o PRIVATE cxx_std_17)
