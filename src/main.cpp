@@ -33,6 +33,9 @@ int main() {
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
                     Position clickLocation = engine.click_detection(sf::Mouse::getPosition(window));
                     std::cout << "Row: " << clickLocation.row << "\tCol: " << clickLocation.col << "\n";
+                    // Pass Click Location into a check, see if there's a piece there, if so calculate moves and store it
+                    // Tell engine to store "last active click"
+                    // If next click is a possible move for that last active position, then move piece
                 };
             };
         };
