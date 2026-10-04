@@ -3,7 +3,6 @@
 int main() {
     Engine engine;
 
-    engine.start();
     sf::RenderWindow window(sf::VideoMode({WINDOW_SIZE, WINDOW_SIZE}), "Chess", sf::State::Windowed, {sf::Style::Titlebar, sf::Style::Close});
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(false);
@@ -51,11 +50,6 @@ int main() {
         window.clear(sf::Color::Black);
 
         engine.draw(window);
-
-
-        // for (int i = 0; i < pieces.size(); i++) {
-        //     window.draw(pieces.at(i).localSprite);
-        // };
 
         window.display();        
     };

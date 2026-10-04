@@ -139,6 +139,11 @@ Position Engine::click_detection(sf::Vector2i mousePos) {
         affectedPiece.row = 7;
     };
 
+    if (boardState.at(affectedPiece.row).at(affectedPiece.col).piece != Piece_Type::EMPTY) {
+        lastClickLocation.col = affectedPiece.col;
+        lastClickLocation.row = affectedPiece.row;
+    };
+
     return affectedPiece;
 };
 
@@ -235,5 +240,6 @@ void Engine::draw(sf::RenderWindow& window) {
 
 };
 
-Engine::Engine() {};
+Engine::Engine() : lastClickLocation(-1, -1) {
+};
 Engine::~Engine() {};
