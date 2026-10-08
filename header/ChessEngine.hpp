@@ -36,6 +36,7 @@ class Engine {
         std::vector<std::vector<ChessPiece>> boardState;
         std::vector<sf::RectangleShape> boardSprites;
         Position lastClickLocation;
+        bool WhiteTurn;
     public:
         Engine();
         ~Engine();

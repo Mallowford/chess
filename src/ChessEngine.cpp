@@ -117,6 +117,17 @@ std::vector<Position> Engine::legal_moves(Piece_Type piece_type, const Position&
     };
 
     // Determine if something is blocking the path or something of yours is already there
+    auto it = res.begin();
+
+    while (it != res.end()) {
+        ChessPiece& check_pieces = this->boardState.at(it->row).at(it->col);
+        if (check_pieces.piece != Piece_Type::EMPTY && check_pieces.White == this->boardState.at(starting_position.row).at(starting_position.col).White) {
+            it = res.erase(it);
+        }
+        else {
+            it++;
+        };
+    };
 
     // Determine if moving will cause check/checkmate
 
