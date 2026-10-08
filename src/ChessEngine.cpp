@@ -116,8 +116,7 @@ std::vector<Position> Engine::legal_moves(Piece_Type piece_type, const Position&
         };
     };
 
-    // Determine if something is blocking the path
-    // WIP, Requires Board Knowledge
+    // Determine if something is blocking the path or something of yours is already there
 
     // Determine if moving will cause check/checkmate
 
@@ -243,3 +242,16 @@ void Engine::draw(sf::RenderWindow& window) {
 Engine::Engine() : lastClickLocation(-1, -1) {
 };
 Engine::~Engine() {};
+
+bool Engine::move(Position desired_move) {
+    // Check if there's a piece that is being moved
+
+    // Grab all legal moves from piece
+
+    // If the location given to move is one of the legal moves
+    // Move the piece on the board and upload sprite location
+    // return true
+
+    // Return false otherwise
+
+};

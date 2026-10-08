@@ -45,7 +45,7 @@ class Engine {
         void start();
         std::vector<Position> legal_moves(Piece_Type type, const Position& starting_position);
         Position click_detection(sf::Vector2i);
-        bool move();
+        bool move(Position desired_move);
         void draw(sf::RenderWindow& window);
     private:
         void CreateBoard();
