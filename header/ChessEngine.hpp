@@ -49,6 +49,7 @@ class Engine {
         bool move(Position desired_move);
         void draw(sf::RenderWindow& window);
     private:
+        void removeIllegalChecks(std::vector<Position>& vec, const Position& starting_position, Piece_Type piece);
         void CreateBoard();
         void pawnRow();
         std::vector<Position> all_moves_knight(const Position& starting_location);

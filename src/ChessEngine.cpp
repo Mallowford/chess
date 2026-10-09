@@ -130,6 +130,7 @@ std::vector<Position> Engine::legal_moves(Piece_Type piece_type, const Position&
     };
 
     // Determine if moving will cause check/checkmate
+    removeIllegalChecks(res, starting_position, piece_type);
 
     // If in Check, remove all moves that do not prevent check
 
